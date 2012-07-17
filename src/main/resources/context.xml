@@ -1,0 +1,12 @@
+<Context>
+   <Realm className="org.apache.catalina.realm.CombinedRealm">
+      <!-- UserDatabase resource defined earlier -->
+      <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+             resourceName="UserDatabase"/>
+      <Realm className="org.apache.catalina.realm.JAASRealm"
+              appName="Sample"
+              useContextClassLoader="true"
+              userClassNames="com.sun.security.auth.UserPrincipal"
+              roleClassNames="sample.principal.UserPrincipal,sample.principal.AdminPrincipal"/>
+   </Realm>
+</Context>

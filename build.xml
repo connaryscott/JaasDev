@@ -1,0 +1,73 @@
+<project name="JaasTutorial" default="compile" basedir=".">
+
+  <property name="project.name" value="JaasTutorial"/>
+
+  <property name="src" location="src"/>
+
+  <property name="resources" value="${src}/main/resources"/>
+  <property name="build" location="build"/>
+  <property name="target" location="target"/>
+  <property name="dist" location="dist"/>
+  <property name="jaas.config" value="sample_jaas.config"/>
+  <property name="context.xml" value="context.xml"/>
+
+  <property environment="env"/>
+
+
+ <target name="clean">
+    <delete dir="${build}"/>
+    <delete dir="${target}"/>
+    <delete dir="${dist}"/>
+ </target>
+
+ <target name="init" depends="clean">
+    <mkdir dir="${build}"/>
+    <mkdir dir="${target}"/>
+    <mkdir dir="${dist}"/>
+ </target>
+
+ <target name="compile" depends="init">
+    <javac includeantruntime="false" srcdir="${src}" destdir="${target}">
+       <classpath>
+          <pathelement path="${target}"/>
+       </classpath>
+    </javac> 
+ </target>
+
+  <target name="resources">
+     <copy todir="${target}" overwrite="true">
+        <fileset dir="${resources}">
+           <include name="*.config"/>
+           <include name="*.xml"/>
+        </fileset> 
+     </copy> 
+  </target> 
+
+   <target name="jar" depends="compile,resources">
+      <jar basedir="${target}" destfile="${dist}/${project.name}.jar"/> 
+   </target>
+
+   <target name="install" depends="jar">
+      <fail unless="env.CATALINA_HOME">
+         CATALINA_HOME environment not defined
+      </fail> 
+      <fail unless="env.CATALINA_BASE">
+         CATALINA_BASE environment not defined
+      </fail> 
+      <copy file="${dist}/${project.name}.jar" tofile="${env.CATALINA_HOME}/lib/${project.name}.jar" overwrite="true"/>
+      <copy file="${target}/${jaas.config}" tofile="${env.CATALINA_HOME}/conf/${jaas.config}" overwrite="true"/>
+      <copy file="${target}/${context.xml}" tofile="${env.CATALINA_BASE}/webapps/rundeck/META-INF/context.xml" overwrite="true"/>
+   </target> 
+
+   <target name="test" depends="jar">
+       <java fork="true" classname="sample.SampleAcn">
+           <sysproperty key="java.security.auth.login.config" value="${target}/${jaas.config}"/>
+           <sysproperty key="java.security.policy" value="${target}/${jaas.policy}"/>
+           <classpath> 
+                     <pathelement path="${target}"/>
+           </classpath> 
+       </java> 
+   </target>
+
+
+</project>
