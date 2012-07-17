@@ -5,6 +5,8 @@ JAAS (Java Authentication and Authorization Service) for Tomcat/Rundeck Integrat
 
 
 Setup Tomcat Environment for Rundeck Build and Test
+This will result in a basic rundeck setup using $CATALINA_BASE/conf/tomcat-users.xml file.
+
 =======
 
 System Java/Javac, apache ant, and git:
@@ -89,3 +91,39 @@ Start Tomcat
 
     [tomcat@ip-10-190-25-201 conf]$ cd $CATALINA_HOME
     [tomcat@ip-10-190-25-201 apache-tomcat-7.0.29]$ bin/startup.sh 
+
+
+Build the jar
+===============
+
+[tomcat@ip-10-190-25-201 JaasDev]$ ant install
+...
+...
+install:
+     [copy] Copying 1 file to /home/tomcat/apache-tomcat-7.0.29/lib
+     [copy] Copying 1 file to /home/tomcat/apache-tomcat-7.0.29/conf
+     [copy] Copying 1 file to /home/tomcat/apache-tomcat-7.0.29/webapps/rundeck/META-INF
+
+The following files will be installed:
+
+    $CATALINA_HOME/lib/JaasTutorial.jar
+    $CATALINA_BASE/conf/sample_jaas.config 
+    $CATALINA_BASE/webapps/rundeck/META-INF/context.xml 
+
+
+
+After verifying rundeck is working, make adjustments to the $HOME/.bashrc file and resource it
+===============
+
+    #export CATALINA_OPTS="-Drdeck.base=$RDECK_BASE -Drundeck.config.location=$RDECK_BASE/rundeck-config.properties"
+    export CATALINA_OPTS="-Djava.security.auth.login.config=${CATALINA_BASE}/conf/sample_jaas.config -Drdeck.base=$RDECK_BASE -Drundeck.config.location=$RDECK_BASE/rundeck-config.properties"
+    [tomcat@ip-10-190-25-201 JaasDev]$ source /home/tomcat/.bashrc
+
+
+Restart the Tomcat Server
+===============
+
+    [tomcat@ip-10-190-25-201 JaasDev]$ /home/tomcat/apache-tomcat-7.0.29/bin/shutdown.sh 
+    [tomcat@ip-10-190-25-201 JaasDev]$ /home/tomcat/apache-tomcat-7.0.29/bin/startup.sh 
+
+
