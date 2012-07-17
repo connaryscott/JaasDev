@@ -96,10 +96,10 @@ Start Tomcat
 Build the jar
 ===============
 
-[tomcat@ip-10-190-25-201 JaasDev]$ ant install
-...
-...
-install:
+    [tomcat@ip-10-190-25-201 JaasDev]$ ant install
+    ...
+    ...
+    install:
      [copy] Copying 1 file to ${CATALINA_HOME}/lib
      [copy] Copying 1 file to ${CATALINA_HOME}/conf
      [copy] Copying 1 file to ${CATALINA_HOME}/webapps/rundeck/META-INF
