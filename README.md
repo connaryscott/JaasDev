@@ -88,7 +88,8 @@ Create the tomcat-users.xml file
 
 chuck@centos-62-64-vm3 apache-tomcat-7.0.29]$ cat tomcat-users.xml 
 
-`<?xml version='1.0' encoding='utf-8'?>
+`
+<?xml version='1.0' encoding='utf-8'?>
 <tomcat-users>
    <role rolename="tomcat"/>
    <role rolename="role1"/>
@@ -98,7 +99,8 @@ chuck@centos-62-64-vm3 apache-tomcat-7.0.29]$ cat tomcat-users.xml
    <user username="tomcat" password="tomcat" roles="tomcat"/>
    <user username="both" password="tomcat" roles="tomcat,role1"/>
    <user username="role1" password="tomcat" roles="role1"/>
-</tomcat-users>`
+</tomcat-users>
+`
 
 Start Tomcat
 
