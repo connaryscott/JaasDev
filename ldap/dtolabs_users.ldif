@@ -1,0 +1,48 @@
+#shadowMin: 0
+dn: uid=rfirefly,ou=People,dc=dtolabs,dc=com
+uid: rfirefly
+cn: Rufus Firefly
+objectClass: account
+objectClass: posixAccount
+objectClass: top
+objectClass: shadowAccount
+userPassword: {CRYPT}oyGtC6v2M9wMA
+shadowLastChange: 15140
+shadowMax: 99999
+shadowWarning: 7
+loginShell: /bin/bash
+uidNumber: 5000
+gidNumber: 5000
+homeDirectory: /home/rfirefly
+
+dn: uid=tspaulding,ou=People,dc=dtolabs,dc=com
+uid: tspaulding
+cn: Captain Spaulding
+objectClass: account
+objectClass: posixAccount
+objectClass: top
+objectClass: shadowAccount
+userPassword: {CRYPT}oyGtC6v2M9wMA
+shadowLastChange: 15140
+shadowMax: 99999
+shadowWarning: 7
+loginShell: /bin/bash
+uidNumber: 5001
+gidNumber: 5001
+homeDirectory: /home/tspaulding
+
+dn: uid=odriftwood,ou=People,dc=dtolabs,dc=com
+uid: odriftwood
+cn: Otis Driftwood
+objectClass: account
+objectClass: posixAccount
+objectClass: top
+objectClass: shadowAccount
+userPassword: {CRYPT}oyGtC6v2M9wMA
+shadowLastChange: 15140
+shadowMax: 99999
+shadowWarning: 7
+loginShell: /bin/bash
+uidNumber: 5002
+gidNumber: 5002
+homeDirectory: /home/odriftwood

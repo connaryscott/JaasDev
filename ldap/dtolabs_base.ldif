@@ -1,0 +1,15 @@
+dn: dc=dtolabs,dc=com
+objectClass: dcObject
+objectClass: organization
+o: dtolabs.com
+dc: dtolabs
+
+dn: ou=People,dc=dtolabs,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: People
+
+dn: ou=roles,dc=dtolabs,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: roles

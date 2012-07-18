@@ -1,0 +1,15 @@
+#admin role
+dn: cn=admin,ou=roles,dc=dtolabs,dc=com
+objectClass: top
+objectClass: posixGroup
+userPassword: {crypt}x
+gidNumber: 1001
+cn: admin
+
+#user role
+dn: cn=user,ou=roles,dc=dtolabs,dc=com
+objectClass: top
+objectClass: posixGroup
+userPassword: {crypt}x
+gidNumber: 1002
+cn: user

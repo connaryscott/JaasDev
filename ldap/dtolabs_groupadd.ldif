@@ -1,0 +1,19 @@
+dn: cn=admin,ou=roles,dc=dtolabs,dc=com
+changetype: modify
+add: memberuid
+memberuid: rfirefly
+
+dn: cn=user,ou=roles,dc=dtolabs,dc=com
+changetype: modify
+add: memberuid
+memberuid: rfirefly
+
+dn: cn=user,ou=roles,dc=dtolabs,dc=com
+changetype: modify
+add: memberuid
+memberuid: tspaulding
+
+dn: cn=user,ou=roles,dc=dtolabs,dc=com
+changetype: modify
+add: memberuid
+memberuid: odriftwood
