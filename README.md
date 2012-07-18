@@ -5,7 +5,7 @@ JAAS (Java Authentication and Authorization Service) for Tomcat/Rundeck Integrat
 
 
 Setup Tomcat Environment for Rundeck Build and Test
-This will result in a basic rundeck setup using $CATALINA_BASE/conf/tomcat-users.xml file.
+This will result in a basic rundeck setup using $CATALINA_BASE/conf/tomcat-users.xml file on a CentOS 6.2 64 bit O/S.
 
 =======
 
