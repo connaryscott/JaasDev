@@ -33,8 +33,7 @@ Configure/Source the .bashrc for Tomcat operation
     [tomcat@ip-10-190-25-201 ~]$ export CATALINA_BASE=${CATALINA_HOME}
     [tomcat@ip-10-190-25-201 ~]$ export RDECK_BASE=${CATALINA_BASE}/rundeck_base
     [tomcat@ip-10-190-25-201 ~]$ export CATALINA_OPTS="-Drdeck.base=$RDECK_BASE -Drundeck.config.location=$RDECK_BASE/rundeck-config.properties"
-
-[tomcat@ip-10-190-25-201 ~]$ source  .bashrc
+    [tomcat@ip-10-190-25-201 ~]$ source  .bashrc
 
 
 Configure the Rundeck War
@@ -54,7 +53,7 @@ Download and Explode the rundeck war
 
 Create the Rundeck Config Properties
 
-NOTE:  CATALINA_BASE is:  ${CATALINA_HOME}, adjust if this does not match your environment
+NOTE:  CATALINA_BASE is:  /home/tomcat/apache-tomcat-7.0.29, adjust if this does not match your environment
 
     [tomcat@ip-10-190-25-201 rundeck]$ cd $RDECK_BASE
     [tomcat@ip-10-190-25-201 rundeck_base]$ mkdir data
@@ -65,7 +64,7 @@ NOTE:  CATALINA_BASE is:  ${CATALINA_HOME}, adjust if this does not match your e
     rss.enabled=true
     reportservice.log4j.port=4435
     dataSource.dbCreate = update
-    dataSource.url = jdbc:hsqldb:file:${CATALINA_HOME}/rundeck_base/data/grailsdb;shutdown=true
+    dataSource.url = jdbc:hsqldb:file:/home/tomcat/apache-tomcat-7.0.29/rundeck_base/data/grailsdb;shutdown=true
     rundeck.v14.rdbsupport=false
 
 
