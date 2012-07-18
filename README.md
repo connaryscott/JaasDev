@@ -36,11 +36,11 @@ Install Tomcat 7
 Configure/Source the .bashrc for Tomcat operation
 
     [tomcat@ip-10-190-25-201 ~]$ tail -5 .bashrc
-    [tomcat@ip-10-190-25-201 ~]$ export CATALINA_HOME=$HOME/apache-tomcat-7.0.29
-    [tomcat@ip-10-190-25-201 ~]$ export CATALINA_BASE=${CATALINA_HOME}
-    [tomcat@ip-10-190-25-201 ~]$ export RDECK_BASE=${CATALINA_BASE}/rundeck_base
-    [tomcat@ip-10-190-25-201 ~]$ export CATALINA_OPTS="-Drdeck.base=$RDECK_BASE -Drundeck.config.location=$RDECK_BASE/rundeck-config.properties"
-    [tomcat@ip-10-190-25-201 ~]$ source  .bashrc
+    export CATALINA_HOME=$HOME/apache-tomcat-7.0.29
+    export CATALINA_BASE=${CATALINA_HOME}
+    export RDECK_BASE=${CATALINA_BASE}/rundeck_base
+    export CATALINA_OPTS="-Drdeck.base=$RDECK_BASE -Drundeck.config.location=$RDECK_BASE/rundeck-config.properties"
+    source  .bashrc
 
 
 Configure the Rundeck War
