@@ -40,7 +40,7 @@ Configure/Source the .bashrc for Tomcat operation
     export CATALINA_BASE=${CATALINA_HOME}
     export RDECK_BASE=${CATALINA_BASE}/rundeck_base
     export CATALINA_OPTS="-Drdeck.base=$RDECK_BASE -Drundeck.config.location=$RDECK_BASE/rundeck-config.properties"
-    source  .bashrc
+    [tomcat@ip-10-190-25-201 ~]$ source  .bashrc
 
 
 Configure the Rundeck War
