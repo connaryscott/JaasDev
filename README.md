@@ -119,7 +119,7 @@ The following files will be installed:
 
 
 
-After verifying rundeck is working, make adjustments to the $HOME/.bashrc file and resource it
+After verifying rundeck is working, make noted adjustment to the $HOME/.bashrc file and re-source it
 ===============
 
     #export CATALINA_OPTS="-Drdeck.base=$RDECK_BASE -Drundeck.config.location=$RDECK_BASE/rundeck-config.properties"
