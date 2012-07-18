@@ -98,6 +98,11 @@ Start Tomcat
     [tomcat@ip-10-190-25-201 conf]$ cd $CATALINA_HOME
     [tomcat@ip-10-190-25-201 apache-tomcat-7.0.29]$ bin/startup.sh 
 
+
+Verify Tomcat and Rundeck Operation using factory default admin/admin username and password:
+
+    http://YOURNODE:8080/rundeck/
+
 Checkout the Source
 ===============
 
