@@ -91,6 +91,13 @@ Start Tomcat
     [tomcat@ip-10-190-25-201 conf]$ cd $CATALINA_HOME
     [tomcat@ip-10-190-25-201 apache-tomcat-7.0.29]$ bin/startup.sh 
 
+Checkout the Source
+===============
+
+(read-only)
+    [tomcat@ip-10-190-25-201 workspace]$ git clone git://github.com/connaryscott/JaasDev.git
+    [tomcat@ip-10-190-25-201 workspace]$ cd JaasDev
+    [tomcat@ip-10-190-25-201 JaasDev]$
 
 Build the jar
 ===============
