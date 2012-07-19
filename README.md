@@ -58,7 +58,7 @@ Download and Explode the rundeck war
     [chuck@centos-62-64-vm3 webapps]$  cd rundeck
     [chuck@centos-62-64-vm3 rundeck]$  unzip ../rundeck.war
 
-Remove the following jar files from the exploded rundeck war
+Remove the following jar files from the exploded rundeck war, these files conflict with the Tomcat 7 server libraries:
 
     [chuck@centos-62-64-vm3 rundeck]$ rm -f ${CATALINA_BASE}/webapps/rundeck/WEB-INF/lib/servlet-api-2.5-20081211.jar \
     ${CATALINA_BASE}/webapps/rundeck/WEB-INF/lib/jasper-runtime-5.5.15.jar \
