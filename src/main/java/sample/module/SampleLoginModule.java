@@ -42,10 +42,22 @@ package sample.module;
 
 import java.util.*;
 import java.io.IOException;
+
+import javax.naming.Context;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
+
 import javax.security.auth.*;
 import javax.security.auth.callback.*;
 import javax.security.auth.login.*;
 import javax.security.auth.spi.*;
+
 import sample.principal.SamplePrincipal;
 import sample.principal.UserPrincipal;
 import sample.principal.AdminPrincipal;
@@ -68,6 +80,102 @@ import sample.principal.AdminPrincipal;
  */
 public class SampleLoginModule implements LoginModule {
 
+
+/**
+ *      * Provider URL
+ *           */
+    private String _providerUrl;
+    
+
+    /**
+ *      * hostname of the ldap server
+ *           */
+    private String _hostname;
+
+    /**
+ *      * port of the ldap server
+ *           */
+    private int _port = 389;
+
+
+    /**
+ *      * Context.INITIAL_CONTEXT_FACTORY
+ *           */
+    private String _contextFactory;
+
+
+    /**
+ *      * object class of a user
+ *           */
+    private String _userObjectClass = "inetOrgPerson";
+
+/**
+ *      * attribute that the principal is located
+ *           */
+    private String _userRdnAttribute = "uid";
+
+
+    /**
+ *      * attribute that the principal is located
+ *          
+ *              /**
+ *                   * attribute that the principal is located
+ *                        */
+    private String _userIdAttribute = "cn";
+
+    /**
+ *      * name of the attribute that a users password is stored under
+ *           * <p/>
+ *                * NOTE: not always accessible, see force binding login
+ *                     */
+    private String _userPasswordAttribute = "userPassword";
+
+    /**
+ *      * base DN where users are to be searched from
+ *           */
+    private String _userBaseDn;
+
+    /**
+ *      * base DN where role membership is to be searched from
+ *           */
+    private String _roleBaseDn;
+
+    /**
+ *      * object class of roles
+ *           */
+    private String _roleObjectClass = "groupOfUniqueNames";
+
+    /**
+ *      * name of the attribute that a user DN would be under a role class
+ *           */
+    private String _roleMemberAttribute = "uniqueMember";
+
+ /**
+ *      * the name of the attribute that a role would be stored under
+ *           */
+    private String _roleNameAttribute = "roleName";
+
+    /**
+ *      * name of the attribute that a username would be under a role class
+ *           */
+    private String _roleUsernameMemberAttribute=null;
+
+    /**
+ *      * the name of the attribute that a role wate String _roleNameAttribute = "roleName";
+ *
+ *          private boolean _debug;
+ *
+ *              /**
+ *                   * if the getUserInfo can pull a password off of the user then password
+ *                        * comparison is an option for authn, to force binding login checks, set
+ *                             * this to true
+ *                                  */
+
+    private DirContext _rootContext;
+
+
+
+
     // initial state
     private Subject subject;
     private CallbackHandler callbackHandler;
@@ -75,7 +183,7 @@ public class SampleLoginModule implements LoginModule {
     private Map options;
 
     // configurable option
-    private boolean debug = false;
+    private boolean _debug = false;
 
     // the authentication status
     private boolean succeeded = false;
@@ -114,7 +222,79 @@ public class SampleLoginModule implements LoginModule {
 	this.options = options;
 
 	// initialize any configured options
-	debug = "true".equalsIgnoreCase((String)options.get("debug"));
+       //debug=true;
+
+
+/* get the rest of this
+   *   providerUrl="ldap://foo"
+   *   contextFactory="com.sun.jndi.ldap.LdapCtxFactory"
+   *   hostname="10.70.13.107"
+   *   port="389"
+   *   userBaseDn="ou=People,dc=dtolabs,dc=com"
+   *   userRdnAttribute="uid"
+   *   userIdAttribute="uid"
+   *   userPasswordAttribute="userPassword"
+   *   userObjectClass="posixAccount"
+   *   roleBaseDn="ou=roles,dc=dtolabs,dc=com"
+   *   roleNameAttribute="cn"
+   *   roleMemberAttribute="memberUid"
+   *   roleUsernameMemberAttribute="memberUid"
+   *   roleObjectClass="posixGroup"
+*/
+
+        _hostname = (String) options.get("hostname");
+        if(options.containsKey("port")) {
+            _port = Integer.parseInt((String) options.get("port"));   
+System.out.println("debug, _port: " + _port);
+        }
+        _providerUrl = (String) options.get("providerUrl");
+System.out.println("debug, providerUrl: " + _providerUrl);
+        _contextFactory = (String) options.get("contextFactory");
+System.out.println("debug, contextFactory: " + _contextFactory);
+        //_bindDn = (String) options.get("bindDn");
+        //_bindPassword = (String) options.get("bindPassword");
+        //_authenticationMethod = (String) options.get("authenticationMethod");
+
+        _userBaseDn = (String) options.get("userBaseDn");
+System.out.println("debug, userBaseDn: " + _userBaseDn);
+        _roleBaseDn = (String) options.get("roleBaseDn");
+System.out.println("debug, roleBaseDn: " + _roleBaseDn);
+
+        //if (options.containsKey("forceBindingLogin")) {
+        //    _forceBindingLogin = Boolean.parseBoolean((String) options.get("forceBindingLogin"));
+        //}
+
+        //if (options.containsKey("forceBindingLoginUseRootContextForRoles")) {
+        //    _forceBindingLoginUseRootContextForRoles = Boolean.parseBoolean((String) options.get("forceBindingLoginUseRootContextForRoles"));
+        //}
+
+        _userObjectClass = getOption(options, "userObjectClass", _userObjectClass);
+System.out.println("debug, userObjectClass: " + _userObjectClass);
+        _userRdnAttribute = getOption(options, "userRdnAttribute", _userRdnAttribute);
+System.out.println("debug, userRdnAttribute: " + _userRdnAttribute);
+        _userIdAttribute = getOption(options, "userIdAttribute", _userIdAttribute);
+System.out.println("debug, userIdAttribute: " + _userIdAttribute);
+        _userPasswordAttribute = getOption(options, "userPasswordAttribute", _userPasswordAttribute);
+System.out.println("debug, userPasswordAttribute: " + _userPasswordAttribute);
+        _roleObjectClass = getOption(options, "roleObjectClass", _roleObjectClass);
+System.out.println("debug, roleObjectClass: " + _roleObjectClass);
+        _roleMemberAttribute = getOption(options, "roleMemberAttribute", _roleMemberAttribute);
+System.out.println("debug, roleMemberAttribute: " + _roleMemberAttribute);
+        _roleUsernameMemberAttribute = getOption(options, "roleUsernameMemberAttribute", _roleUsernameMemberAttribute);
+System.out.println("debug, roleUsernameMemberAttribute: " + _roleUsernameMemberAttribute);
+        _roleNameAttribute = getOption(options, "roleNameAttribute", _roleNameAttribute);
+System.out.println("debug, roleNameAttribute: " + _roleNameAttribute);
+        _debug = Boolean.parseBoolean(String.valueOf(getOption(options, "debug", Boolean
+                .toString(_debug))));
+
+
+
+        try {
+            _rootContext = new InitialDirContext(getEnvironment());
+        } catch (NamingException ex) {
+            throw new IllegalStateException("Unable to establish root context", ex);
+        }
+
     }
 
     /**
@@ -132,11 +312,25 @@ public class SampleLoginModule implements LoginModule {
      */
     public boolean login() throws LoginException {
 
-	// prompt for a user name and password
+	// we might need  callbacks so i check for them
 	if (callbackHandler == null)
 	    throw new LoginException("Error: no CallbackHandler available " +
 			"to garner authentication information from the user");
 
+	Callback[] callbacks = new Callback[1];
+	callbacks[0] = new NameCallback("user name: ");
+	try {
+	    callbackHandler.handle(callbacks);
+	    username = ((NameCallback)callbacks[0]).getName();
+	    System.out.println("\t\t[SampleLoginModule] username: " + username);
+            try {
+                List roleList = getUserRoles(_rootContext, username); 
+            } catch (NamingException e) {
+               System.out.println("SampleLoginModule: Caught NamingException: " + e.getMessage());
+               throw new LoginException(e.toString());
+            }
+/*
+  NONE OF THIS IS NEEDED SINCE WE HAVE AUTHENTICTED, WE NEED ROLES NOW
 	Callback[] callbacks = new Callback[2];
 	callbacks[0] = new NameCallback("user name: ");
 	callbacks[1] = new PasswordCallback("password: ", false);
@@ -153,7 +347,7 @@ public class SampleLoginModule implements LoginModule {
 	    System.arraycopy(tmpPassword, 0,
 			password, 0, tmpPassword.length);
 	    ((PasswordCallback)callbacks[1]).clearPassword();
- 
+*/ 
 	} catch (java.io.IOException ioe) {
 	    throw new LoginException(ioe.toString());
 	} catch (UnsupportedCallbackException uce) {
@@ -161,9 +355,10 @@ public class SampleLoginModule implements LoginModule {
 		" not available to garner authentication information " +
 		"from the user");
 	}
+/*
 
 	// print debugging information
-	if (debug) {
+	if (_debug) {
 	    System.out.println("\t\t[SampleLoginModule] " +
 				"user entered user name: " +
 				username);
@@ -179,6 +374,32 @@ public class SampleLoginModule implements LoginModule {
 	boolean passwordCorrect = false;
 	if (username.equals("testUser"))
 	    usernameCorrect = true;
+	if (username.equals("rfirefly"))
+	    usernameCorrect = true;
+
+
+	if (usernameCorrect &&
+	    password.length == 11 &&
+	    password[0] == 'G' &&
+	    password[1] == 'r' &&
+	    password[2] == '0' &&
+	    password[3] == 'u' &&
+	    password[4] == 'c' &&
+	    password[5] == 'h' &&
+	    password[6] == '0' &&
+	    password[7] == 'M' &&
+	    password[8] == '@' &&
+	    password[9] == 'r' &&
+	    password[10] == 'x')  {
+	    // authentication succeeded!!!
+	    passwordCorrect = true;
+	    if (_debug)
+		System.out.println("\t\t[SampleLoginModule] " +
+				"authentication succeeded");
+	    succeeded = true;
+        }
+
+
 	if (usernameCorrect &&
 	    password.length == 12 &&
 	    password[0] == 't' &&
@@ -196,15 +417,17 @@ public class SampleLoginModule implements LoginModule {
 
 	    // authentication succeeded!!!
 	    passwordCorrect = true;
-	    if (debug)
+	    if (_debug)
 		System.out.println("\t\t[SampleLoginModule] " +
 				"authentication succeeded");
 	    succeeded = true;
+        }
+        if (succeeded) {
 	    return true;
 	} else {
 
 	    // authentication failed -- clean out state
-	    if (debug)
+	    if (_debug)
 		System.out.println("\t\t[SampleLoginModule] " +
 				"authentication failed");
 	    succeeded = false;
@@ -218,6 +441,9 @@ public class SampleLoginModule implements LoginModule {
 		throw new FailedLoginException("Password Incorrect");
 	    }
 	}
+*/
+        succeeded = true;
+        return true;
     }
 
 
@@ -246,11 +472,21 @@ public class SampleLoginModule implements LoginModule {
     public boolean commit() throws LoginException {
 	if (succeeded == false) {
 	    return false;
-	} else {
+        }
+	//} else {
 	    // add a Principal (authenticated identity)
 	    // to the Subject
 
 	    // assume the user we authenticated is the SamplePrincipal
+	  
+
+           //getPrincipals(username);
+
+
+        return true;
+
+/*
+  old hardcoded junk here
 	    userPrincipal = new SamplePrincipal(username);
 	    if (!subject.getPrincipals().contains(userPrincipal)) 
 		subject.getPrincipals().add(userPrincipal);
@@ -263,7 +499,7 @@ AdminPrincipal adminUserPrincipal = new AdminPrincipal("admin");
 if (!subject.getPrincipals().contains(adminUserPrincipal)) 
    subject.getPrincipals().add(adminUserPrincipal);
 
-	    if (debug) {
+	    if (_debug) {
 		System.out.println("\t\t[SampleLoginModule] " +
 				"added principals to Subject");
 	    }
@@ -276,7 +512,8 @@ if (!subject.getPrincipals().contains(adminUserPrincipal))
 
 	    commitSucceeded = true;
 	    return true;
-	}
+	//}
+*/	
     }
 
     /**
@@ -345,4 +582,137 @@ if (!subject.getPrincipals().contains(adminUserPrincipal))
 	userPrincipal = null;
 	return true;
     }
+
+    @SuppressWarnings("unchecked")
+    private String getOption(Map options, String key, String defaultValue) {
+        Object value = options.get(key);
+
+        if (value == null) {
+            return defaultValue;
+        }
+
+        return (String) value;
+    }
+
+
+    /**
+     * get the context for connection
+     *      * 
+     *           * @return
+     *                */
+    @SuppressWarnings("unchecked")
+    public Hashtable getEnvironment() {
+        Properties env = new Properties();
+
+        env.put(Context.INITIAL_CONTEXT_FACTORY, _contextFactory);
+        if(_providerUrl != null) {
+            env.put(Context.PROVIDER_URL, _providerUrl);
+        } else {
+            if (_hostname != null) {
+                String url = "ldap://" + _hostname + "/";
+                if (_port != 0) {
+                    url += ":" + _port + "/";
+                } 
+            
+                //Log.warn("Using hostname and port.  Use providerUrl instead: " + url);
+                env.put(Context.PROVIDER_URL, url);
+            }
+        }
+        
+/*
+        if (_authenticationMethod != null) {
+            env.put(Context.SECURITY_AUTHENTICATION, _authenticationMethod);
+        }
+
+        if (_bindDn != null) {
+            env.put(Context.SECURITY_PRINCIPAL, _bindDn);
+        }
+
+        if (_bindPassword != null) {
+            env.put(Context.SECURITY_CREDENTIALS, _bindPassword);
+        }
+*/
+
+        return env;
+    }
+
+
+
+    private List getUserRoles(DirContext dirContext, String username) throws LoginException,
+            NamingException {
+        String userDn = _userRdnAttribute + "=" + username + "," + _userBaseDn;
+        return getUserRolesByDn(dirContext, userDn, username);
+    }
+
+
+    @SuppressWarnings("unchecked")
+    private List getUserRolesByDn(DirContext dirContext, String userDn, String username) throws LoginException,
+            NamingException {
+        ArrayList roleList = new ArrayList();
+
+        if (dirContext == null || _roleBaseDn == null || (_roleMemberAttribute == null
+                                                          && _roleUsernameMemberAttribute == null)
+                || _roleObjectClass == null) {
+            //Log.warn("JettyCachingLdapLoginModule: No user roles found: roleBaseDn, roleObjectClass and roleMemberAttribute or roleUsernameMemberAttribute must be specified.");
+            return roleList;
+        }
+
+        SearchControls ctls = new SearchControls();
+        ctls.setDerefLinkFlag(true);
+        ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+
+        String filter = "(&(objectClass={0})({1}={2}))";
+        final NamingEnumeration results;
+        if(null!=_roleUsernameMemberAttribute){
+            Object[] filterArguments = { _roleObjectClass, _roleUsernameMemberAttribute, username };
+            results = dirContext.search(_roleBaseDn, filter, filterArguments, ctls);
+        }else{
+            Object[] filterArguments = { _roleObjectClass, _roleMemberAttribute, userDn };
+            results = dirContext.search(_roleBaseDn, filter, filterArguments, ctls);
+        }
+
+
+        while (results.hasMoreElements()) {
+            SearchResult result = (SearchResult) results.nextElement();
+
+            Attributes attributes = result.getAttributes();
+
+            if (attributes == null) {
+                continue;
+            }
+
+            Attribute roleAttribute = attributes.get(_roleNameAttribute);
+
+            if (roleAttribute == null) {
+                continue;
+            }
+
+            NamingEnumeration roles = roleAttribute.getAll();
+            while (roles.hasMore()) {
+/*
+                if (_rolePrefix != null && !"".equalsIgnoreCase(_rolePrefix)) {
+                    String role = (String) roles.next();
+                    // Log.info("Role for user " + userDn + ": " + role); 
+                    roleList.add(role.replace(_rolePrefix, ""));
+                } else {
+*/
+   
+                    String role = (String) roles.next();
+                    System.out.println("Role for user " + userDn + ": " + role); 
+                    roleList.add(role);
+/*
+                }
+*/
+            }
+        }
+        if (roleList.size() < 1) {
+            //Log.warn("JettyCachingLdapLoginModule: User '" + username + "' has no role membership; role query configuration may be incorrect");
+        }else{
+            //Log.debug("JettyCachingLdapLoginModule: User '" + username + "' has roles: " + roleList);
+        }
+
+        return roleList;
+    }
+
+
 }

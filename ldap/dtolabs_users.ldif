@@ -1,3 +1,5 @@
+#all passwords set to:  Gr0uch0M@rx
+#  and hashed to:  $6$YqCsPgyc$2aWlo7tnJX7Tqq6f47gzqADF2u1Vw2uUWldgIjHKp2CFJe6L00LTc18NcyliE5WfD4hLNJsYiU6YgZNYmOrpX0
 #shadowMin: 0
 dn: uid=rfirefly,ou=People,dc=dtolabs,dc=com
 uid: rfirefly
@@ -6,7 +8,7 @@ objectClass: account
 objectClass: posixAccount
 objectClass: top
 objectClass: shadowAccount
-userPassword: {CRYPT}oyGtC6v2M9wMA
+userPassword: Gr0uch0M@rx
 shadowLastChange: 15140
 shadowMax: 99999
 shadowWarning: 7
@@ -22,7 +24,7 @@ objectClass: account
 objectClass: posixAccount
 objectClass: top
 objectClass: shadowAccount
-userPassword: {CRYPT}oyGtC6v2M9wMA
+userPassword: Gr0uch0M@rx
 shadowLastChange: 15140
 shadowMax: 99999
 shadowWarning: 7
@@ -38,7 +40,7 @@ objectClass: account
 objectClass: posixAccount
 objectClass: top
 objectClass: shadowAccount
-userPassword: {CRYPT}oyGtC6v2M9wMA
+userPassword: Gr0uch0M@rx
 shadowLastChange: 15140
 shadowMax: 99999
 shadowWarning: 7
