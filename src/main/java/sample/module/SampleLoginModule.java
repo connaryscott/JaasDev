@@ -58,9 +58,15 @@ import javax.security.auth.callback.*;
 import javax.security.auth.login.*;
 import javax.security.auth.spi.*;
 
+
+import sample.principal.Role;
 import sample.principal.SamplePrincipal;
+/*
 import sample.principal.UserPrincipal;
 import sample.principal.AdminPrincipal;
+*/
+
+import com.sun.security.auth.UserPrincipal;
 
 /**
  * <p> This sample LoginModule authenticates users with a password.
@@ -192,9 +198,10 @@ public class SampleLoginModule implements LoginModule {
     // username and password
     private String username;
     private char[] password;
+    private List roleList;
 
     // testUser's SamplePrincipal
-    private SamplePrincipal userPrincipal;
+    //private SamplePrincipal userPrincipal;
 
     /**
      * Initialize this <code>LoginModule</code>.
@@ -324,7 +331,7 @@ System.out.println("debug, roleNameAttribute: " + _roleNameAttribute);
 	    username = ((NameCallback)callbacks[0]).getName();
 	    System.out.println("\t\t[SampleLoginModule] username: " + username);
             try {
-                List roleList = getUserRoles(_rootContext, username); 
+                this.roleList = getUserRoles(_rootContext, username); 
             } catch (NamingException e) {
                System.out.println("SampleLoginModule: Caught NamingException: " + e.getMessage());
                throw new LoginException(e.toString());
@@ -483,6 +490,8 @@ System.out.println("debug, roleNameAttribute: " + _roleNameAttribute);
            //getPrincipals(username);
 
 
+        assignRoles(this.subject, this.username, this.roleList);
+
         return true;
 
 /*
@@ -516,6 +525,32 @@ if (!subject.getPrincipals().contains(adminUserPrincipal))
 */	
     }
 
+    private void assignRoles(Subject subject, String username, List roleList) {
+
+//com.sun.security.auth.UserPrincipal userPrincipal = new com.sun.security.auth.UserPrincipal(username);
+SamplePrincipal userPrincipal = new SamplePrincipal(username);
+userPrincipal.setRoles(roleList);
+if (!subject.getPrincipals().contains(userPrincipal))
+   subject.getPrincipals().add(userPrincipal);
+
+       String roles[] = (String [])roleList.toArray(new String[0]);
+       for (int i=0; i<roles.length; i++) {
+         System.out.println("\t\t[SampleLoginModule] checking role: " + roles[i]);
+
+          Role role = new Role(roles[i]);
+
+          if (!subject.getPrincipals().contains(role)) {
+             
+             System.out.println("\t\t[SampleLoginModule] adding role: " + roles[i] + " to user: " + username);
+             subject.getPrincipals().add(role);
+          }
+       }
+
+    }
+
+
+
+
     /**
      * <p> This method is called if the LoginContext's
      * overall authentication failed.
@@ -546,7 +581,9 @@ if (!subject.getPrincipals().contains(adminUserPrincipal))
 		    password[i] = ' ';
 		password = null;
 	    }
+/*
 	    userPrincipal = null;
+*/
 	} else {
 	    // overall authentication succeeded and commit succeeded,
 	    // but someone else's commit failed
@@ -570,7 +607,9 @@ if (!subject.getPrincipals().contains(adminUserPrincipal))
      */
     public boolean logout() throws LoginException {
 
+/*
 	subject.getPrincipals().remove(userPrincipal);
+*/
 	succeeded = false;
 	succeeded = commitSucceeded;
 	username = null;
@@ -579,7 +618,9 @@ if (!subject.getPrincipals().contains(adminUserPrincipal))
 		password[i] = ' ';
 	    password = null;
 	}
+/*
 	userPrincipal = null;
+*/
 	return true;
     }
 
@@ -713,6 +754,7 @@ if (!subject.getPrincipals().contains(adminUserPrincipal))
 
         return roleList;
     }
+
 
 
 }

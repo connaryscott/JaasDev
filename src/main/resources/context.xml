@@ -6,7 +6,11 @@
       <Realm className="org.apache.catalina.realm.JAASRealm"
               appName="Sample"
               useContextClassLoader="true"
+              userClassNames="sample.principal.SamplePrincipal"
+              roleClassNames="sample.principal.Role"/>
+   </Realm>
+<!--
               userClassNames="com.sun.security.auth.UserPrincipal"
               roleClassNames="sample.principal.UserPrincipal,sample.principal.AdminPrincipal"/>
-   </Realm>
+-->
 </Context>

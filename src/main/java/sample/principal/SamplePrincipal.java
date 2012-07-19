@@ -42,6 +42,9 @@ package sample.principal;
 
 import java.security.Principal;
 
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * <p> This class implements the <code>Principal</code> interface
  * and represents a Sample user.
@@ -63,6 +66,16 @@ public class SamplePrincipal implements Principal, java.io.Serializable {
      * @serial
      */
     private String name;
+
+    private List<String> roles = new ArrayList<String>();
+    public List getRoles() {
+       //this.roles.add("user");
+       //this.roles.add("admin");
+       return this.roles;
+    }
+    public void setRoles(List roles) {
+       this.roles = roles;
+    }
 
     /**
      * Create a SamplePrincipal with a Sample username.
