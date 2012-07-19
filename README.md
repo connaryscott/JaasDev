@@ -53,10 +53,10 @@ Create the rundeck base directory
 Download and Explode the rundeck war
 
     [tomcat@ip-10-190-25-201 ~]$ cd $CATALINA_BASE/webapps
-    [tomcat@ip-10-190-25-201 webapps]$ curl -o rundeck.war http://build.rundeck.org/job/rundeck-master/lastSuccessfulBuild/artifact/rundeckapp/target/rundeck-1.4.3.war
+    [tomcat@ip-10-190-25-201 webapps]$ curl -o /tmp/rundeck.war http://build.rundeck.org/job/rundeck-master/lastSuccessfulBuild/artifact/rundeckapp/target/rundeck-1.4.3.war
     [chuck@centos-62-64-vm3 webapps]$ mkdir rundeck
     [chuck@centos-62-64-vm3 webapps]$  cd rundeck
-    [chuck@centos-62-64-vm3 rundeck]$  unzip ../rundeck.war
+    [chuck@centos-62-64-vm3 rundeck]$  unzip /tmp/rundeck.war
 
 Remove the following jar files from the exploded rundeck war, these files conflict with the Tomcat 7 server libraries:
 
@@ -153,9 +153,32 @@ Install openldap packages
 
     [root@centos-62-64-vm3 conf]# yum install openldap-servers  openldap-clients
 
-Configure the slapd cert and key files:
+Configure the slapd cert 
 
     [root@centos-62-64-vm3 conf]# openssl req -new -x509 -nodes -out /etc/pki/tls/certs/slapdcert.pem -keyout  /etc/pki/tls/certs/slapdkey.pem -days 365
+    Generating a 2048 bit RSA private key
+    .............+++
+    ....................................+++
+    writing new private key to '/etc/pki/tls/certs/slapdkey.pem'
+    -----
+    You are about to be asked to enter information that will be incorporated
+    into your certificate request.
+    What you are about to enter is what is called a Distinguished Name or a DN.
+    There are quite a few fields but you can leave some blank
+    For some fields there will be a default value,
+    If you enter '.', the field will be left blank.
+    -----
+    Country Name (2 letter code) [XX]:US
+    State or Province Name (full name) []:CA      
+    Locality Name (eg, city) [Default City]:Redwood City
+    Organization Name (eg, company) [Default Company Ltd]:DTO Solutions, Inc.
+    Organizational Unit Name (eg, section) []:dtolabs
+    Common Name (eg, your name or your server's hostname) []:rundeck.dtolabs.com
+    Email Address []:services@dtosolutions.com
+
+
+Configure the key files:
+
     [root@centos-62-64-vm3 conf]# chown root:ldap /etc/pki/tls/certs/slapdcert.pem  /etc/pki/tls/certs/slapdkey.pem
     [root@centos-62-64-vm3 conf]# chmod 644 /etc/pki/tls/certs/slapdcert.pem
     [root@centos-62-64-vm3 conf]# chmod 740 /etc/pki/tls/certs/slapdkey.pem
@@ -169,7 +192,7 @@ Enable Secure LDAP (LDAPS):
     ---
     > SLAPD_LDAPS=no
 
-Get the openldap factory default password hash:
+Get the openldap factory default password hash (default password, historically is "secret"):
 
     [root@centos-62-64-vm3 conf]# slappasswd -s secret
     {SSHA}vkoe6x9wUYkHsjZWC8Nlwdxg80k2FwDR
