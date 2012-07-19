@@ -106,7 +106,7 @@ Start Tomcat
     [tomcat@ip-10-190-25-201 apache-tomcat-7.0.29]$ bin/startup.sh 
 
 
-Verify Tomcat and Rundeck Operation using factory default admin/admin username and password:
+Verify Tomcat and that Rundeck is operational using the factory default admin/admin username and password:
 
     http://YOURNODE:8080/rundeck/
 
@@ -119,7 +119,7 @@ Checkout the Source
     [tomcat@ip-10-190-25-201 workspace]$ cd JaasDev
     [tomcat@ip-10-190-25-201 JaasDev]$
 
-Build the jar
+Build and Install the jar and supporting configuration
 ===============
 
     [tomcat@ip-10-190-25-201 JaasDev]$ ant install
@@ -138,7 +138,7 @@ The following files will be installed:
 
 
 
-After verifying rundeck is working, make noted adjustment to the $HOME/.bashrc file and re-source it
+Adjust bashrc for JAAS configuration and re-source it:
 ===============
 
     #export CATALINA_OPTS="-Drdeck.base=$RDECK_BASE -Drundeck.config.location=$RDECK_BASE/rundeck-config.properties"
