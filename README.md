@@ -58,6 +58,13 @@ Download and Explode the rundeck war
     [chuck@centos-62-64-vm3 webapps]$  cd rundeck
     [chuck@centos-62-64-vm3 rundeck]$  unzip ../rundeck.war
 
+Remove the following jar files from the exploded rundeck war
+
+    [chuck@centos-62-64-vm3 rundeck]$ rm -f ${CATALINA_BASE}/webapps/rundeck/WEB-INF/lib/servlet-api-2.5-20081211.jar \
+    ${CATALINA_BASE}/webapps/rundeck/WEB-INF/lib/jasper-runtime-5.5.15.jar \
+    ${CATALINA_BASE}/webapps/rundeck/WEB-INF/lib/jasper-compiler-jdt-5.5.15.jar \
+    ${CATALINA_BASE}/webapps/rundeck/WEB-INF/lib/jasper-compiler-5.5.15.jar
+
 Create the Rundeck Config Properties
 
 NOTE:  CATALINA_BASE is:  /home/tomcat/apache-tomcat-7.0.29, adjust if this does not match your environment
