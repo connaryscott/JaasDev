@@ -146,23 +146,6 @@ Adjust bashrc for JAAS configuration and re-source it:
     [tomcat@ip-10-190-25-201 JaasDev]$ source $HOME/.bashrc
 
 
-Restart the Tomcat Server
-===============
-
-    [tomcat@ip-10-190-25-201 JaasDev]$ ${CATALINA_HOME}/bin/shutdown.sh 
-    [tomcat@ip-10-190-25-201 JaasDev]$ ${CATALINA_HOME}/bin/startup.sh 
-
-Rundeck should now respond to either tomcat-users.xml or a hardcoded username/password served by the JaasTutorial jar
-
-    http://YOURNODE:8080/rundeck/
-
-verify rundeck login by using both:
-
-    admin/admin
-    -and-
-    testUser/testPassword
-
-
 Set up OpenLDAP
 ===============
 
@@ -360,3 +343,37 @@ Setup the namespace, groups, and member users:
     
     # numResponses: 9
     # numEntries: 8
+
+
+
+Restart the Tomcat Server
+===============
+
+    [tomcat@ip-10-190-25-201 JaasDev]$ ${CATALINA_HOME}/bin/shutdown.sh
+    [tomcat@ip-10-190-25-201 JaasDev]$ ${CATALINA_HOME}/bin/startup.sh
+
+Rundeck should now respond to either tomcat-users.xml or a hardcoded username/password served by the JaasTutorial jar
+
+    http://YOURNODE:8080/rundeck/
+
+verify rundeck login by using both:
+
+    admin/admin
+
+For LDAP usernames and passwords, see:
+
+    [tomcat@centos-62-64-vm3 JaasDev]$ cat ldap/dtolabs_passwords.ldif 
+    dn: uid=rfirefly,ou=People,dc=dtolabs,dc=com
+    changetype: modify
+    replace: userPassword
+    userPassword: Gr0uch0M@rx
+    
+    dn: uid=tspaulding,ou=People,dc=dtolabs,dc=com
+    changetype: modify
+    replace: userPassword
+    userPassword: Gr0uch0M@rx
+    
+    dn: uid=odriftwood,ou=People,dc=dtolabs,dc=com
+    changetype: modify
+    replace: userPassword
+    userPassword: Gr0uch0M@rx
