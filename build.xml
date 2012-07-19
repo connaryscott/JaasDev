@@ -58,7 +58,7 @@
       </fail> 
       <copy file="${dist}/${project.name}.jar" tofile="${env.CATALINA_HOME}/lib/${project.name}.jar" overwrite="true"/>
       <copy file="${dist}/${jaas.config}" tofile="${env.CATALINA_HOME}/conf/${jaas.config}" overwrite="true"/>
-      <copy file="${dist}/${context.xml}" tofile="${env.CATALINA_BASE}/webapps/rundeck/META-INF/context.xml" overwrite="true"/>
+      <copy file="${dist}/${context.xml}" tofile="${env.CATALINA_BASE}/conf/Catalina/localhost/rundeck.xml" overwrite="true"/>
    </target> 
 
    <target name="test" depends="jar">
