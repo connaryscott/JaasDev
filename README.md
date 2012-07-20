@@ -53,7 +53,7 @@ Create the rundeck base directory
 Download and Explode the rundeck war
 
     [tomcat@ip-10-190-25-201 ~]$ cd $CATALINA_BASE/webapps
-    [tomcat@ip-10-190-25-201 webapps]$ curl -o /tmp/rundeck.war http://build.rundeck.org/job/rundeck-master/lastSuccessfulBuild/artifact/rundeckapp/target/rundeck-1.4.3.war
+    [tomcat@ip-10-190-25-201 webapps]$ curl -o /tmp/rundeck.war http://build.rundeck.org/view/All/job/rundeck-development/lastSuccessfulBuild/artifact/rundeckapp/target/rundeck-1.4.4-dev.war
     [chuck@centos-62-64-vm3 webapps]$ mkdir rundeck
     [chuck@centos-62-64-vm3 webapps]$  cd rundeck
     [chuck@centos-62-64-vm3 rundeck]$  unzip /tmp/rundeck.war
