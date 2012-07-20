@@ -14,6 +14,9 @@
   <property environment="env"/>
 
 
+
+
+
  <target name="clean">
     <delete dir="${build}"/>
     <delete dir="${target}"/>
@@ -26,7 +29,23 @@
     <mkdir dir="${dist}"/>
  </target>
 
- <target name="compile" depends="init">
+ <target name="check-env">
+      <fail unless="env.CATALINA_HOME">
+         CATALINA_HOME environment not defined
+      </fail> 
+      <fail unless="env.CATALINA_BASE">
+         CATALINA_BASE environment not defined
+      </fail> 
+      <fail message="directory ${env.CATALINA_BASE}/webapps/rundeck/WEB-INF/lib does not appear to exist">
+         <condition>
+            <not>
+               <available file="${env.CATALINA_BASE}/webapps/rundeck/WEB-INF/lib" type="dir"/>
+            </not>
+         </condition>
+      </fail> 
+ </target>
+
+ <target name="compile" depends="check-env,init">
     <javac includeantruntime="false" srcdir="${src}" destdir="${target}">
        <classpath>
           <pathelement path="${target}"/>
@@ -50,12 +69,6 @@
    </target>
 
    <target name="install" depends="jar">
-      <fail unless="env.CATALINA_HOME">
-         CATALINA_HOME environment not defined
-      </fail> 
-      <fail unless="env.CATALINA_BASE">
-         CATALINA_BASE environment not defined
-      </fail> 
       <copy file="${dist}/${project.name}.jar" tofile="${env.CATALINA_HOME}/lib/${project.name}.jar" overwrite="true"/>
       <copy file="${dist}/${jaas.config}" tofile="${env.CATALINA_HOME}/conf/${jaas.config}" overwrite="true"/>
       <copy file="${dist}/${context.xml}" tofile="${env.CATALINA_BASE}/conf/Catalina/localhost/rundeck.xml" overwrite="true"/>
@@ -66,7 +79,7 @@
            <sysproperty key="java.security.auth.login.config" value="${target}/${jaas.config}"/>
            <sysproperty key="java.security.policy" value="${target}/${jaas.policy}"/>
            <classpath> 
-                     <pathelement path="${target}"/>
+               <pathelement path="${target}"/>
            </classpath> 
        </java> 
    </target>
