@@ -60,7 +60,7 @@ import javax.security.auth.spi.*;
 
 
 import sample.principal.Role;
-import sample.principal.UserPrincipal;
+import com.sun.security.auth.UserPrincipal;
 
 import sample.Log;
 
