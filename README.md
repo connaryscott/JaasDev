@@ -134,7 +134,8 @@ The following files will be installed:
 
     $CATALINA_HOME/lib/JaasTutorial.jar
     $CATALINA_BASE/conf/sample_jaas.config 
-    $CATALINA_BASE/webapps/rundeck/META-INF/context.xml 
+    $CATALINA_BASE/conf/Catalina/localhost/rundeck.xml
+
 
 
 
